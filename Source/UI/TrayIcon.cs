@@ -20,7 +20,7 @@ namespace Lockey.UI
         private readonly InputBlocker inputBlocker;
 
 
-        public TrayIcon() : base("Keyboard Locker")
+        public TrayIcon() : base("Lockey")
         {
             HooksManager.KeyPressed += this.onKeyPressed;
             HooksManager.KeyReleased += this.onKeyReleased;
@@ -89,6 +89,8 @@ namespace Lockey.UI
 
         protected override List<MenuItem> getMenuItems()
         {
+            this.setTitle($"Lockey - press \"{this.inputBlocker.BlockingKey}\" to lock your keyboard and mouse");
+
             var items = base.getMenuItems();
             items.Insert(0, new MenuItem("Set shortcut...", this.onSetShortcutClick));
             items.Insert(0, new MenuItem("-"));
@@ -116,6 +118,14 @@ namespace Lockey.UI
                 this.soundBlock?.Play();
             else
                 this.soundUnblock?.Play();
+        }
+
+
+        private void setActionKey(Keys key)
+        {
+            this.inputBlocker.BlockingKey.Key = key;
+            this.inputBlocker.UnblockingKey.Key = key;
+            this.createContextMenu();
         }
 
         #endregion
@@ -167,9 +177,7 @@ namespace Lockey.UI
                 if (MessageBox.Show($"Do you wish to set this shortcut? {(ActionKey)key}", "Set shortcut", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) == DialogResult.No)
                     return;
 
-                this.inputBlocker.BlockingKey.Key = key;
-                this.inputBlocker.UnblockingKey.Key = key;
-                this.createContextMenu();
+                this.setActionKey(key);
             }
             finally
             {

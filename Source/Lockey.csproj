@@ -49,9 +49,6 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-    <Reference Include="TrayToolkit">
-      <HintPath>..\..\TrayToolkit\Build\TrayToolkit.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Input\HooksManager.cs" />
@@ -79,6 +76,12 @@
     <EmbeddedResource Include="Resources\IconLockedLight.png" />
     <EmbeddedResource Include="Resources\IconUnlockedDark.png" />
     <EmbeddedResource Include="Resources\IconUnlockedLight.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\TrayToolkit\Source\TrayToolkit.csproj">
+      <Project>{855e79ef-1e63-4a3e-953e-3b5dc52ebd4c}</Project>
+      <Name>TrayToolkit</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
