@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Media;
 using System.Windows.Forms;
-using Common;
 using Lockey.Input;
+using TrayToolkit;
 
 namespace Lockey.UI
 {
