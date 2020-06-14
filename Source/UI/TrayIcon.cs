@@ -78,8 +78,8 @@ namespace Lockey.UI
                 this.trayIcon.Visible = true;
                 if (blockingState)
                     BalloonTooltip.Show(
-                        this.iconLock,
                         $"Your keyboard and mouse is locked.{Environment.NewLine}Press \"{this.inputBlocker.UnblockingKey}\" to unlock.",
+                        this.iconLock,
                         $"Hold \"{this.inputBlocker.UnblockingKey}\" to turn off the screen.",
                         5000);
                 else
@@ -153,13 +153,13 @@ namespace Lockey.UI
 
         private void onScreenOffRequested()
         {
-            BalloonTooltip.Show(this.iconScreen, "Turning the screen off...");
+            BalloonTooltip.Show("Turning the screen off...", this.iconScreen);
         }
 
         private void onKeyPressed(Keys key)
         {
             if (this.shortcutSettingMode)
-                BalloonTooltip.Show(this.iconLock, $"Press desired key combination{Environment.NewLine}{(ActionKey)key}");
+                BalloonTooltip.Show($"Press desired key combination{Environment.NewLine}{(ActionKey)key}", this.iconLock);
         }
 
 
@@ -188,7 +188,7 @@ namespace Lockey.UI
 
         private void onScreenTurnedOff()
         {
-            BalloonTooltip.Show(this.iconScreen, "..zzZ");
+            BalloonTooltip.Show("..zzZ", this.iconScreen);
             BalloonTooltip.Activate();
         }
 
@@ -206,7 +206,7 @@ namespace Lockey.UI
         {
             this.inputBlocker.Enabled = false;
             this.shortcutSettingMode = true;
-            BalloonTooltip.Show(this.iconLock, $"Press desired key combination...");
+            BalloonTooltip.Show($"Press desired key combination...", this.iconLock);
         }
 
 #endregion
