@@ -4,7 +4,8 @@ using System.Drawing;
 using System.Media;
 using System.Windows.Forms;
 using Lockey.Input;
-using TrayToolkit;
+using TrayToolkit.Helpers;
+using TrayToolkit.UI;
 
 namespace Lockey.UI
 {
@@ -37,8 +38,8 @@ namespace Lockey.UI
             this.soundUnblock = this.getSound("Unlock.wav");
             this.soundLongPress = this.getSound("LongPress.wav");
 
-            this.iconLock = this.getResourceImage("Resources.IconLocked.png");
-            this.iconScreen = this.getResourceImage("Resources.IconScreenOff.png");
+            this.iconLock = ResourceHelper.GetResourceImage("Resources.IconLocked.png");
+            this.iconScreen = ResourceHelper.GetResourceImage("Resources.IconScreenOff.png");
         }
 
         #region UI
@@ -87,11 +88,11 @@ namespace Lockey.UI
             catch { }
         }
 
-        protected override List<MenuItem> getMenuItems()
+        protected override List<MenuItem> getContextMenuItems()
         {
             this.setTitle($"Lockey - press \"{this.inputBlocker.BlockingKey}\" to lock your keyboard and mouse");
 
-            var items = base.getMenuItems();
+            var items = base.getContextMenuItems();
             items.Insert(0, new MenuItem("Set shortcut...", this.onSetShortcutClick));
             items.Insert(0, new MenuItem("-"));
             items.Insert(0, new MenuItem("Turn off screen", this.onScreenTurnOffClick));
@@ -105,7 +106,7 @@ namespace Lockey.UI
         /// </summary>
         private SoundPlayer getSound(string fileName)
         {
-            return new SoundPlayer(this.getResourceStream($"Resources.{fileName}"));
+            return new SoundPlayer(ResourceHelper.GetResourceStream($"Resources.{fileName}"));
         }
 
         
