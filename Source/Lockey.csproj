@@ -51,10 +51,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Input\HooksManager.cs" />
     <Compile Include="Input\InputBlocker.cs" />
-    <Compile Include="Input\ActionKey.cs" />
-    <Compile Include="Input\SystemControls.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UI\TrayIcon.cs">

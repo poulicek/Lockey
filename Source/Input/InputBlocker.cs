@@ -1,17 +1,18 @@
 ﻿using System;
 using System.Threading;
+using TrayToolkit.Helpers;
+using TrayToolkit.OS;
+using TrayToolkit.OS.Input;
 
 namespace Lockey.Input
 {
-    public class InputBlocker : IDisposable
+    public class InputBlocker : InputListener
     {
         public event Action ScreenOffRequested;
         public event Action ScreenTurnedOff;
         public event Action<bool> BlockingStateChanged;
 
         public bool Enabled { get; set; }
-
-        public bool IsBlocking { get { return HooksManager.BlockInput; } }
 
         public ActionKey BlockingKey { get; private set; }
         public ActionKey UnblockingKey { get; private set; }
@@ -69,7 +70,7 @@ namespace Lockey.Input
 
             this.StartBlocking();
 #if !DEBUG
-            this.turnScreenOff(500);
+            SystemControls.TurnOffScreen();
 #endif
             this.ScreenTurnedOff?.Invoke();
         }
@@ -77,29 +78,23 @@ namespace Lockey.Input
 
         public bool StartBlocking()
         {
-            if (!this.Enabled || HooksManager.BlockInput)
+            if (!this.Enabled || this.BlockInput)
                 return false;
 
             this.setBlockingState(true);
-            this.BlockingStateChanged?.Invoke(HooksManager.BlockInput);
+            this.BlockingStateChanged?.Invoke(this.BlockInput);
             return true;
         }
 
 
         public bool StopBlocking()
         {
-            if (!this.Enabled || !HooksManager.BlockInput)
+            if (!this.Enabled || !this.BlockInput)
                 return false;
 
             this.setBlockingState(false);
-            this.BlockingStateChanged?.Invoke(HooksManager.BlockInput);
+            this.BlockingStateChanged?.Invoke(this.BlockInput);
             return true;
-        }
-
-
-        public void Dispose()
-        {
-            this.setBlockingState(false);
         }
 
         #endregion
@@ -113,30 +108,7 @@ namespace Lockey.Input
 
         private void setBlockingState(bool blockInput)
         {
-            HooksManager.SetHooks(blockInput, this.BlockingKey, this.UnblockingKey);
-        }
-
-
-        /// <summary>
-        /// Turns off the screen
-        /// </summary>
-        private void turnScreenOff(int timeLimitMs)
-        {
-            try
-            {
-                var t = new Thread(() =>
-                {
-                    try
-                    {
-                        SystemControls.TurnOffScreen();
-                    }
-                    catch { }
-                });
-                t.Start();
-                Thread.Sleep(timeLimitMs);
-                t.Abort();
-            }
-            catch { }
+            this.Listen(blockInput, this.BlockingKey, this.UnblockingKey);
         }
 
         #endregion

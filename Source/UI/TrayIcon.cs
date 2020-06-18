@@ -5,6 +5,7 @@ using System.Media;
 using System.Windows.Forms;
 using Lockey.Input;
 using TrayToolkit.Helpers;
+using TrayToolkit.OS.Input;
 using TrayToolkit.UI;
 
 namespace Lockey.UI
@@ -23,16 +24,16 @@ namespace Lockey.UI
 
         public TrayIcon() : base("Lockey")
         {
-            HooksManager.KeyPressed += this.onKeyPressed;
-            HooksManager.KeyReleased += this.onKeyReleased;
-            HooksManager.KeyBlocked += this.onKeyBlocked;
-
             BalloonTooltip.InitActivation();
 
             this.inputBlocker = new InputBlocker(Keys.Pause, Keys.Pause);
             this.inputBlocker.ScreenTurnedOff += this.onScreenTurnedOff;
             this.inputBlocker.ScreenOffRequested += this.onScreenOffRequested;
             this.inputBlocker.BlockingStateChanged += this.onBlockingStateChanged;
+
+            this.inputBlocker.KeyPressed += this.onKeyPressed;
+            this.inputBlocker.KeyReleased += this.onKeyReleased;
+            this.inputBlocker.KeyBlocked += this.onKeyBlocked;
 
             this.soundBlock = this.getSound("Lock.wav");
             this.soundUnblock = this.getSound("Unlock.wav");
@@ -60,7 +61,7 @@ namespace Lockey.UI
         /// </summary>
         protected override string getIconName(bool lightMode)
         {
-            var locked = this.inputBlocker.IsBlocking;
+            var locked = this.inputBlocker.BlockInput;
             return $"Resources.Icon{(locked ? "Locked" : "Unlocked")}{(lightMode ? "Light" : "Dark")}.png";
         }
 
@@ -72,7 +73,7 @@ namespace Lockey.UI
         {
             try
             {
-                if (blockingState != this.inputBlocker.IsBlocking)
+                if (blockingState != this.inputBlocker.BlockInput)
                     return;
 
                 this.trayIcon.Visible = true;
