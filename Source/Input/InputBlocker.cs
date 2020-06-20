@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using TrayToolkit.Helpers;
+using TrayToolkit.IO.Display;
 using TrayToolkit.OS;
 using TrayToolkit.OS.Input;
 
@@ -70,7 +71,7 @@ namespace Lockey.Input
 
             this.StartBlocking();
 #if !DEBUG
-            SystemControls.TurnOffScreen();
+            DisplayContoller.TurnOffScreen();
 #endif
             this.ScreenTurnedOff?.Invoke();
         }
