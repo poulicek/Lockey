@@ -169,7 +169,7 @@ namespace Lockey.UI
             if (!this.shortcutSettingMode)
                 return;
 
-            if (ActionKey.GetUnmodifiedKey(key) == Keys.None)
+            if (key.GetUnmodifiedKey() == Keys.None)
                 return;
 
             try
