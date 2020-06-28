@@ -22,10 +22,8 @@ namespace Lockey.UI
         private readonly InputBlocker inputBlocker;
 
 
-        public TrayIcon() : base("Lockey")
+        public TrayIcon() : base("Lockey", "https://github.com/poulicek/lockey")
         {
-            BalloonTooltip.InitActivation();
-
             this.inputBlocker = new InputBlocker(Keys.Pause, Keys.Pause);
             this.inputBlocker.ScreenTurnedOff += this.onScreenTurnedOff;
             this.inputBlocker.ScreenOffRequested += this.onScreenOffRequested;
