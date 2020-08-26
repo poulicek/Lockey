@@ -12,6 +12,7 @@ namespace Lockey.UI
 {
     public class TrayIcon : TrayIconBase
     {
+        private bool randomizeUnlockKey;
         private bool shortcutSettingMode;
 
         private readonly Bitmap iconLock;
@@ -92,7 +93,9 @@ namespace Lockey.UI
             this.setTitle($"Lockey - press \"{this.inputBlocker.BlockingKey}\" to lock your keyboard and mouse");
 
             var items = base.getContextMenuItems();
-            items.Insert(0, new MenuItem("Set shortcut...", this.onSetShortcutClick));
+            items.Insert(0, new MenuItem("-"));
+            items.Insert(0, new MenuItem("Unlock by random number", this.onRandomKeyClick) { Checked = this.randomizeUnlockKey });
+            items.Insert(0, new MenuItem("Set lock key...", this.onSetShortcutClick));
             items.Insert(0, new MenuItem("-"));
             items.Insert(0, new MenuItem("Turn off screen", this.onScreenTurnOffClick));
             items.Insert(0, new MenuItem("Lock", this.onLockClick, (Shortcut)this.inputBlocker.BlockingKey.Key));
@@ -121,11 +124,24 @@ namespace Lockey.UI
         }
 
 
+        /// <summary>
+        /// Sets the key for blocking and unblocking
+        /// </summary>
         private void setActionKey(Keys key)
         {
             this.inputBlocker.BlockingKey.Key = key;
             this.inputBlocker.UnblockingKey.Key = key;
             this.createContextMenu();
+        }
+
+
+        /// <summary>
+        /// Returns a random numeric key
+        /// </summary>
+        private Keys getRandomNumericKey()
+        {
+            var num = new Random().Next(0, 9);
+            return (Keys)((int)Keys.D0 + num);
         }
 
         #endregion
@@ -140,6 +156,9 @@ namespace Lockey.UI
 
         private void onBlockingStateChanged(bool state)
         {
+            if (this.randomizeUnlockKey)
+                this.inputBlocker.UnblockingKey.Key = this.getRandomNumericKey();
+
             this.updateLook();
             this.showToolTip(state);
             this.playNotificationSound(state);
@@ -152,7 +171,7 @@ namespace Lockey.UI
 
         private void onScreenOffRequested()
         {
-            BalloonTooltip.Show("Turning the screen off...", this.iconScreen);
+            BalloonTooltip.Show("Turning off the screen...", this.iconScreen);
         }
 
         private void onKeyPressed(Keys key)
@@ -208,6 +227,15 @@ namespace Lockey.UI
             BalloonTooltip.Show($"Press desired key combination...", this.iconLock);
         }
 
-#endregion
+        private void onRandomKeyClick(object sender, EventArgs e)
+        {
+            this.randomizeUnlockKey = !(sender as MenuItem).Checked;
+            if (!this.randomizeUnlockKey)
+                this.setActionKey(this.inputBlocker.BlockingKey.Key);
+
+            this.createContextMenu();
+        }
+
+        #endregion
     }
 }
