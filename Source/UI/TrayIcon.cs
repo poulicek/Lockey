@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Lockey.Input;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Media;
 using System.Windows.Forms;
-using Lockey.Input;
 using TrayToolkit.Helpers;
 using TrayToolkit.OS.Input;
 using TrayToolkit.UI;
@@ -25,7 +25,10 @@ namespace Lockey.UI
 
         public TrayIcon() : base("Lockey", "https://github.com/poulicek/lockey")
         {
-            this.inputBlocker = new InputBlocker(Keys.Pause, Keys.Pause);
+            var lockKey = AppConfigHelper.Get<Keys>("LockKey", Keys.Pause);
+            this.randomizeUnlockKey = AppConfigHelper.Get<bool>("RandomUnlockKey");
+
+            this.inputBlocker = new InputBlocker(lockKey, lockKey);
             this.inputBlocker.ScreenTurnedOff += this.onScreenTurnedOff;
             this.inputBlocker.ScreenOffRequested += this.onScreenOffRequested;
             this.inputBlocker.BlockingStateChanged += this.onBlockingStateChanged;
@@ -197,6 +200,7 @@ namespace Lockey.UI
                     return;
 
                 this.setActionKey(key);
+                AppConfigHelper.Set("LockKey", key);
             }
             finally
             {
@@ -233,6 +237,7 @@ namespace Lockey.UI
             if (!this.randomizeUnlockKey)
                 this.setActionKey(this.inputBlocker.BlockingKey.Key);
 
+            AppConfigHelper.Set("RandomUnlockKey", this.randomizeUnlockKey);
             this.createContextMenu();
         }
 
