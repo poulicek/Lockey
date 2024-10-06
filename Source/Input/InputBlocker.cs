@@ -106,7 +106,8 @@ namespace Lockey.Input
 
         private void setBlockingState(bool blockInput)
         {
-            this.Listen(blockInput, this.BlockingKey, this.UnblockingKey);
+            this.BlockInput = blockInput;
+            this.Listen(blockInput, true, this.BlockingKey, this.UnblockingKey);
         }
 
         #endregion
